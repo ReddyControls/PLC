@@ -1,0 +1,40 @@
+import csv
+
+def add_custom_tags_to_csv_interactive(csv_file_path):
+    tag_type = input("Enter the tag type (e.g., TAG, ALIAS): ")
+    scope = input("Enter the scope (e.g., MainProgram): ")
+    base_name = input("Enter the base name for the tags (e.g., Motor): ")
+    datatype = input("Enter the datatype (e.g., BOOL): ")
+    attributes = input("Enter the attributes (e.g., '(RADIX := Decimal, Constant := false, ExternalAccess := Read/Write)'): ")
+    try:
+        num_tags = int(input("Enter the number of tags to add: "))
+        if num_tags < 1:
+            raise ValueError("Number of tags must be at least 1.")
+        start_index = int(input("Enter the starting index for the tags: "))
+    except ValueError as e:
+        print(f"Invalid input: {e}")
+        return
+
+    new_rows = [
+        [tag_type, scope, f'{base_name}{i}', '', datatype, '', attributes]
+        for i in range(start_index, start_index + num_tags)
+    ]
+
+    try:
+        with open(csv_file_path, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(new_rows)
+        print(f"New rows have been added to {csv_file_path}.")
+    except Exception as e:
+        print(f"Failed to write to the file: {e}")
+
+# Example usage:
+try:
+    # Prompt the user for the CSV file path
+    # Note: The user needs to provide the absolute path to the file.
+    # For Windows users, backslashes in the path should be escaped (e.g., C:\\Users\\SRP\\Downloads\\Trainer_FromUpload_Tags_r1.CSV)
+    # or use raw strings (e.g., r'C:\Users\SRP\Downloads\Trainer_FromUpload_Tags_r1.CSV').
+    user_csv_file_path = input("Enter the full path to your CSV file: ")
+    add_custom_tags_to_csv_interactive(user_csv_file_path)
+except Exception as e:
+    print(f"An error occurred: {e}")
